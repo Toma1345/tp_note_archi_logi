@@ -21,7 +21,7 @@ const fetchQuestionnaire = async () => {
     }
 }
 
-watch(() => route.params.id, fetchQuestionnaire, { immediate: true })
+// watch(() => route.params.id, fetchQuestionnaire, { immediate: true })
 
 onMounted(fetchQuestionnaire)
 </script>
@@ -34,8 +34,9 @@ onMounted(fetchQuestionnaire)
                 {{ question.text }}
             </li>
         </ul>
+        <router-link :to="`/edit/${questionnaire.id}`">Modifier le questionnaire</router-link>
     </div>
-    <p v-else>Sélectionnez un questionnaire</p>
+    <p v-else>Chargement ...</p>
 </template>
 
 <style scoped>

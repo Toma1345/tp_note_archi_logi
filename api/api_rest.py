@@ -86,6 +86,19 @@ class QuestionnaireItem(Resource):
         db.session.commit()
         return {}, 204
 
+    @ns.expect(questionnaire_input_model, validate=True)
+    @ns.marshal_with(questionnaire_model)
+    def put(self, id):
+        questionnaire = Questionnaire.query.get(id)
+        if not questionnaire:
+            abort(404, message="Questionnaire non trouvé")
+
+        # Mettre à jour le titre du questionnaire
+        questionnaire.title = api.payload['title']
+        db.session.commit()
+        return questionnaire
+
+
 @ns.route("/questions")
 class QuestionCollection(Resource):
     @ns.marshal_list_with(question_model)
@@ -125,6 +138,20 @@ class QuestionItem(Resource):
         db.session.delete(question)
         db.session.commit()
         return {}, 204
+
+    @ns.expect(question_input_model, validate=True)
+    @ns.marshal_with(question_model)
+    def put(self, id):
+        question = Question.query.get(id)
+        if not question:
+            abort(404, message="Question non trouvée")
+
+        # Mettre à jour la question
+        question.text = api.payload['text']
+        question.type = api.payload['type']
+        question.choices = api.payload.get('choices', None)
+        db.session.commit()
+        return question
 
 if __name__ == '__main__':
     with app.app_context():

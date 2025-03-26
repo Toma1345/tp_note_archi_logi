@@ -3,6 +3,7 @@ import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 
 const questionnaires = ref([])
+const router = useRouter()
 
 const fetchQuestionnaires = async () => {
   try {
@@ -16,12 +17,26 @@ const fetchQuestionnaires = async () => {
   }
 }
 
-onMounted(fetchQuestionnaires)
-const router = useRouter()
-
-const viewDetails = (id) => {
-    router.push({name : 'questionnaire-details', params: { id }})
+const deleteQuestionnaire = async (id) => {
+    try {
+        const response = await fetch(`http://127.0.0.1:5000/api/questionnaires/${id}`, {method: 'DELETE'})
+        if (response.ok) {
+            fetchQuestionnaires()
+        } else {
+            console.error('Erreur lors de la suppression')
+        }
+    } catch (error) {
+        console.error(error)
+    }
 }
+
+onMounted(fetchQuestionnaires)
+
+
+// const viewDetails = (id) => {
+//     router.push({name : 'questionnaire-details', params: { id }})
+// }
+
 </script>
 
 <template>
@@ -29,9 +44,8 @@ const viewDetails = (id) => {
         <h2>Liste des Questionnaires</h2>
         <ul>
             <li v-for="quiz in questionnaires" :key="quiz.id">
-                <button @click="viewDetails(quiz.id)">
-                    {{ quiz.title }}
-                </button>
+                <router-link :to="`/questionnaire/${quiz.id}`">{{ quiz.title }}</router-link>
+                <button @click="deleteQuestionnaire(quiz.id)">Supprimer</button>
             </li>
         </ul>
     </div>
