@@ -10,8 +10,6 @@ import HelloWorld from './components/HelloWorld.vue'
   </header>
 
   <main>
-    <router-link to="/questionnaires">Voir les questionnaires</router-link>
-    <router-link to="/create">Créer un questionnaire</router-link>
     <router-view />
   </main>
 </template>

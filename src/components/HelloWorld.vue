@@ -11,6 +11,10 @@ defineProps({
   <div class="greetings">
     <h1 class="blue">{{ msg }}</h1>
   </div>
+  <h3>
+    <router-link to="/questionnaires">Voir les questionnaires</router-link>
+    <router-link to="/create">Créer un questionnaire</router-link>
+  </h3>
 </template>
 
 <style scoped>

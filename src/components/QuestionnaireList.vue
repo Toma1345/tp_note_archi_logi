@@ -39,8 +39,13 @@ onMounted(fetchQuestionnaires)
         <h2>Liste des Questionnaires</h2>
         <ul>
             <li v-for="quiz in questionnaires" :key="quiz.id">
-                <router-link :to="`/questionnaire/${quiz.id}`">{{ quiz.title }}</router-link>
-                <button @click="deleteQuestionnaire(quiz.id)">Supprimer</button>
+                <div class="quiz-actions">
+                    <router-link :to="`/questionnaire/${quiz.id}`" class="action-link">{{ quiz.title }}</router-link>
+                    <div class="buttons-group">
+                        <button @click="deleteQuestionnaire(quiz.id)" class="action-link">Supprimer</button>
+                        <router-link :to="`/questionnaire/${quiz.id}/repondre`" class="action-link repondre-btn">Répondre</router-link>
+                    </div>
+                </div>
             </li>
         </ul>
     </div>
@@ -51,15 +56,45 @@ ul {
     list-style-type: none;
     padding: 0;
 }
+
 li {
     padding: 8px;
     border-bottom: 1px solid #ddd;
 }
-button {
+
+.quiz-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.buttons-group {
+    display: flex;
+    gap: 15px;
+}
+
+.action-link {
+    text-decoration: none;
+    color: rgb(0, 120, 189);;
+    cursor: pointer;
+}
+
+button.action-link {
     background: none;
     border: none;
-    color: blue;
+    font: inherit;
     cursor: pointer;
-    text-decoration: underline;
+    text-decoration: none;
+    color: rgb(0, 120, 189);
+    transition: 0.4s;
+    padding: 3px;
+}
+
+button:hover {
+    background-color: hsla(246, 100%, 37%, 0.2);
+  }
+
+.repondre-btn {
+    color: rgb(0, 120, 189);;
 }
 </style>
