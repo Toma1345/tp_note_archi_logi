@@ -32,11 +32,6 @@ const deleteQuestionnaire = async (id) => {
 
 onMounted(fetchQuestionnaires)
 
-
-// const viewDetails = (id) => {
-//     router.push({name : 'questionnaire-details', params: { id }})
-// }
-
 </script>
 
 <template>
