@@ -86,7 +86,6 @@ const submitForm = async () => {
         
         existingQuestions = existingQuestions.filter(q => q.id !== question.id)
       } else {
-        // Créer une nouvelle question
         await fetch('http://127.0.0.1:5000/api/questions', {
           method: 'POST',
           body: JSON.stringify(questionData),

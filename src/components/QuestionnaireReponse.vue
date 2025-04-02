@@ -12,7 +12,6 @@ const score = ref(0)
 const loading = ref(true)
 const error = ref(null)
 
-// Récupérer le questionnaire
 const fetchQuestionnaire = async () => {
   const questionnaireId = route.params.id
   if (!questionnaireId) {
@@ -29,7 +28,6 @@ const fetchQuestionnaire = async () => {
     
     questionnaire.value = await response.json()
     
-    // Initialiser les réponses utilisateur
     if (questionnaire.value && questionnaire.value.questions) {
       userAnswers.value = questionnaire.value.questions.map(() => "")
     }
@@ -42,7 +40,6 @@ const fetchQuestionnaire = async () => {
   }
 }
 
-// Question actuelle
 const currentQuestion = computed(() => {
   if (!questionnaire.value || !questionnaire.value.questions) {
     return null
@@ -50,10 +47,8 @@ const currentQuestion = computed(() => {
   return questionnaire.value.questions[currentQuestionIndex.value]
 })
 
-// Vérifier si c'est la première question
 const isFirstQuestion = computed(() => currentQuestionIndex.value === 0)
 
-// Vérifier si c'est la dernière question
 const isLastQuestion = computed(() => {
   if (!questionnaire.value || !questionnaire.value.questions) {
     return true
@@ -61,38 +56,32 @@ const isLastQuestion = computed(() => {
   return currentQuestionIndex.value === questionnaire.value.questions.length - 1
 })
 
-// Naviguer à la question précédente
 const goToPreviousQuestion = () => {
   if (!isFirstQuestion.value) {
     currentQuestionIndex.value--
   }
 }
 
-// Naviguer à la question suivante
 const goToNextQuestion = () => {
   if (!isLastQuestion.value) {
     currentQuestionIndex.value++
   }
 }
 
-// Soumettre le questionnaire
 const submitQuestionnaire = () => {
   if (!questionnaire.value || !questionnaire.value.questions) {
     return
   }
   
-  // Calculer le score
   let totalScore = 0
   questionnaire.value.questions.forEach((question, index) => {
     const userAnswer = userAnswers.value[index]
     
-    // Pour les QCM, comparer directement
     if (question.type === 'qcm') {
       if (userAnswer.toLowerCase() === question.answer.toLowerCase()) {
         totalScore++
       }
     } 
-    // Pour les questions ouvertes, comparer sans tenir compte de la casse
     else {
       if (userAnswer.toLowerCase() === question.answer.toLowerCase()) {
         totalScore++
@@ -104,7 +93,6 @@ const submitQuestionnaire = () => {
   quizCompleted.value = true
 }
 
-// Recommencer le questionnaire
 const restartQuiz = () => {
   currentQuestionIndex.value = 0
   userAnswers.value = questionnaire.value.questions.map(() => "")
@@ -112,7 +100,6 @@ const restartQuiz = () => {
   score.value = 0
 }
 
-// Retourner à la liste des questionnaires
 const backToList = () => {
   router.push('/questionnaires')
 }
@@ -122,18 +109,15 @@ onMounted(fetchQuestionnaire)
 
 <template>
   <div class="quiz-container">
-    <!-- Affichage du chargement -->
     <div v-if="loading" class="loading">
       <p>Chargement du questionnaire...</p>
     </div>
     
-    <!-- Affichage des erreurs -->
     <div v-else-if="error" class="error">
       <p>{{ error }}</p>
       <button @click="backToList" class="btn back-btn">Retour à la liste</button>
     </div>
     
-    <!-- Affichage du questionnaire -->
     <div v-else-if="questionnaire && !quizCompleted" class="questionnaire">
       <h2>{{ questionnaire.title }}</h2>
       
@@ -148,7 +132,6 @@ onMounted(fetchQuestionnaire)
       <div v-if="currentQuestion" class="question-card">
         <h3>{{ currentQuestion.text }}</h3>
         
-        <!-- Question à choix multiples -->
         <div v-if="currentQuestion.type === 'qcm'" class="qcm-container">
           <div v-for="(choice, index) in currentQuestion.choices.split(',')" :key="index" class="choice-item">
             <input 
@@ -162,7 +145,6 @@ onMounted(fetchQuestionnaire)
           </div>
         </div>
         
-        <!-- Question ouverte -->
         <div v-else class="open-question">
           <input 
             type="text" 
@@ -200,7 +182,6 @@ onMounted(fetchQuestionnaire)
       </div>
     </div>
     
-    <!-- Affichage des résultats -->
     <div v-else-if="quizCompleted" class="results-container">
       <h2>Résultats</h2>
       
